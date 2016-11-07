@@ -1,0 +1,11 @@
+Vitrual Ring Buffer library for Debian
+--------------------------------------
+
+The -fgnu-linker and -fmove-all-movables compiler options are removed
+from configure in order to compile with recent gcc versions (such as
+the ones used in Debian) (subject to upstream fix).
+
+The -nostartfiles and -nostdlib compiler options were also removed
+from configure so shlibs dependencies can be determined by debhelper.
+
+ -- Székelyi Szabolcs <cc@mail.3d.hu>, Sun, 13 Aug 2006 02:40:05 +0200

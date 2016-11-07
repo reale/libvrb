@@ -1,0 +1,114 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH VBUF 1 "2006 Sep 5"
+.SH NAME
+vbuf \- Virtual Ring Buffer shell interface
+.SH SYNOPSIS
+.B vbuf
+.RI [ options ]
+.br
+.SH DESCRIPTION
+This manual page documents briefly the
+.B vbuf
+command.
+.PP
+.B vbuf
+is a program to glue two programs (a producer and a consumer) together,
+one of which not being able to fulfil the other's constant data rate
+requirements.
+.SH OPTIONS
+.TP
+\fB\-h\fP
+.br
+Show short help message.
+.TP
+\fB\-\-help\fP
+.br
+Show long help message.
+.TP
+\fB\-p\fP, \fB\-\-progress\fP
+.br
+Show progress status line.
+.TP
+\fB\-q\fP, \fB\-\-quiet\fP
+.br
+Suppress progress status line.  The default is to show the progress
+display.
+.TP
+\fB\-s\fP \fIsize\fP, \fB\-\-size=\fP\fIsize\fP
+.br
+Set buffer size in bytes.  Suffixes k, m, and g may be used.  The
+actual size used will be rounded up for system mapping requirements.
+The default is 1m, or 1048576 bytes.
+.TP
+\fB\-t\fP \fItime\fP, \fB\-\-time=\fP\fIseconds\fP
+.br
+Set time in seconds between progress display refreshes.  Fractions of
+a second may be used.  Default is 1.500000 seconds.
+.TP
+\fB\-b\fP, \fB\-\-bits\fP
+.br
+Set progress rate display units to bits per second.
+.TP
+\fB\-B\fP, \fB\-\-bytes\fP
+.br
+Set progress rate display units to bytes per second.  The default is
+bytes.
+.TP
+\fB\-d\fP, \fB\-\-decimal\fP
+.br
+Set progress rate display base to decimal.  The default is decimal.
+.TP
+\fB\-x\fP, \fB\-\-hexadecimal\fP
+.br
+Set progress rate display base to hexadecimal.  
+.TP
+\fB\-\-octal\fP
+.br
+Set progress rate display base to octal.
+.TP
+\fB\-i\fP \fIfile\fP, \fB\-\-input=\fP\fIfile\fP
+.br
+Specify an input file to be opened and used instead of using stdin.
+.TP
+\fB\-o\fP \fIfile\fP, \fB\-\-output=\fP\fIfile\fP
+.br
+Specify an output file to be opened and used instead of using stdout.
+.TP
+\fB\-M\fP \fIfile\fP, \fB\-\-mapfile=\fP\fIfile\fP
+.br
+Specify a file which will be used for backing store for the virtual
+ring buffer.  The allows using filesystem space in case swap space is
+full.
+.TP
+\fB\-r\fP \fIbytes\fP, \fB\-\-read\-min=\fP\fIbytes\fP
+.br
+Specify the minimum number of bytes to be requested by read.  Reading
+will not happen unless at least this much buffer space is available.
+The default is 1.
+.TP
+\fB\-R\fP \fIbytes\fP, \fB\-\-read\-max=\fP\fIbytes\fP
+.br
+Specify the maximum number of bytes to be requested by read.  Reading
+will not request more even if more buffer space is available.  The
+default is the full buffer size.
+.TP
+\fB\-w\fP \fIbytes\fP, \fB\-\-write\-min=\fP\fIbytes\fP
+.br
+Specify the minumum number of bytes to be written.  Writing will not
+be done unless at least this much data is available.  Once end of file
+is reached on input, a smaller amount may be written.  The default is
+1.
+.TP
+\fB\-W\fP \fIbytes\fP, \fB\-\-write\-max=\fP\fIbytes\fP
+.br
+Specify the maximum number of bytes to be written.  Writing will not
+write more each time even if more data is available in the buffer.
+The default is the full buffer size.
+.SH AUTHOR
+VRB and vbuf were written by Phil Howard <vrb@ipal.org>.
+.PP
+This manual page was written by Szekelyi Szabolcs <cc@mail.3d.hu>, for
+the Debian project (but may be used by others).

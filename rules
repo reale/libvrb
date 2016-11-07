@@ -1,0 +1,70 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+#export DH_VERBOSE=1
+
+# These are used for cross-compiling and for saving the configure script
+# from having to guess our platform (since we know it already)
+DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+
+CFLAGS = -Wall -g
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CONFFLAGS += -O0
+else
+	CONFFLAGS += -O2
+endif
+
+ifneq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
+	CONFFLAGS += --no-strip
+endif
+
+version=$(shell dpkg-parsechangelog | grep ^Version: | cut -d" " -f2 | cut -d- -f1)
+
+build: build-stamp
+build-stamp:
+	dh_testdir
+	./configure --prefix=$(CURDIR)/debian/tmp/usr $(CONFFLAGS) --execdynamic --remove-old --version=$(version)
+	$(MAKE)
+	touch $@
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp 
+	[ -f build/Makefile ] && ( cd build; $(MAKE) distclean ) || true
+	rm -fr build
+	rm -f Makefile
+	dh_clean 
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k 
+	$(MAKE) install prefix=$(CURDIR)/debian/tmp/usr
+
+
+binary-indep: build install
+
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	mv debian/tmp/usr/lib/libvrb.a.$(version) debian/tmp/usr/lib/libvrb.a
+	dh_install -A --sourcedir=debian/tmp
+	dh_link -A
+	dh_installman -A
+	dh_installchangelogs -plibvrb0 ChangeLog
+	dh_installdocs -plibvrb0
+	dh_strip -A
+	dh_compress -A
+	dh_fixperms -A
+	dh_makeshlibs
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install 
