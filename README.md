@@ -1,0 +1,2 @@
+# libvrb
+Virtual Ring Buffer
