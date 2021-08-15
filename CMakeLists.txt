@@ -23,7 +23,9 @@ set (GEN_HEADER_DIR ${CMAKE_CURRENT_BINARY_DIR}/include)
 include_directories(include)
 include_directories(${GEN_HEADER_DIR})
 
+if (NOT CMAKE_CROSSCOMPILING)
 add_executable(buildheader CONFIG/buildheader.c)
+endif()
 
 file(MAKE_DIRECTORY ${GEN_HEADER_DIR})
 add_custom_command(OUTPUT ${GEN_HEADER_DIR}/vrb.h 
@@ -32,8 +34,15 @@ add_custom_command(OUTPUT ${GEN_HEADER_DIR}/vrb.h
                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 add_custom_target(generate_header ALL DEPENDS ${GEN_HEADER_DIR}/vrb.h)
 
-add_library(libvrb SHARED ${SOURCE_FILES})
-add_dependencies(libvrb generate_header)
+add_library(vrb SHARED ${SOURCE_FILES})
+add_dependencies(vrb generate_header)
 
 add_executable(vbuf vrb/src/bin/vbuf.c)
-target_link_libraries(vbuf libvrb)
+target_link_libraries(vbuf vrb)
+
+install(TARGETS vrb DESTINATION /usr/lib)
+install(TARGETS vbuf DESTINATION /usr/bin)
+
+if (NOT CMAKE_CROSSCOMPILING)
+install(TARGETS buildheader DESTINATION /usr/bin)
+endif()
