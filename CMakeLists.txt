@@ -1,4 +1,3 @@
-include_directories(include)
 
 set (SOURCE_FILES
     vrb/src/lib/vrb/vrb_destroy.c
@@ -19,14 +18,22 @@ set (SOURCE_FILES
     vrb/src/lib/vrb/vrb_write.c
     )
 
+set (GEN_HEADER_DIR ${CMAKE_CURRENT_BINARY_DIR}/include)
+
+include_directories(include)
+include_directories(${GEN_HEADER_DIR})
+
 add_executable(buildheader CONFIG/buildheader.c)
 
-add_custom_command(OUTPUT include/vrb.h 
-                   COMMAND buildheader include/vrb.h ${SOURCE_FILES} 
+file(MAKE_DIRECTORY ${GEN_HEADER_DIR})
+add_custom_command(OUTPUT ${GEN_HEADER_DIR}/vrb.h 
+                   COMMAND buildheader ${GEN_HEADER_DIR}/vrb.h ${SOURCE_FILES}
                    DEPENDS buildheader 
                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+add_custom_target(generate_header ALL DEPENDS ${GEN_HEADER_DIR}/vrb.h)
 
-add_library(libvrb SHARED ${SOURCE_FILES} include/vrb.h)
+add_library(libvrb SHARED ${SOURCE_FILES})
+add_dependencies(libvrb generate_header)
 
 add_executable(vbuf vrb/src/bin/vbuf.c)
 target_link_libraries(vbuf libvrb)
