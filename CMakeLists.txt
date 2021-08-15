@@ -23,16 +23,17 @@ set (GEN_HEADER_DIR ${CMAKE_CURRENT_BINARY_DIR}/include)
 include_directories(include)
 include_directories(${GEN_HEADER_DIR})
 
-if (NOT CMAKE_CROSSCOMPILING)
-add_executable(buildheader CONFIG/buildheader.c)
-endif()
 
 file(MAKE_DIRECTORY ${GEN_HEADER_DIR})
 add_custom_command(OUTPUT ${GEN_HEADER_DIR}/vrb.h 
                    COMMAND buildheader ${GEN_HEADER_DIR}/vrb.h ${SOURCE_FILES}
-                   DEPENDS buildheader 
                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 add_custom_target(generate_header ALL DEPENDS ${GEN_HEADER_DIR}/vrb.h)
+
+if (NOT CMAKE_CROSSCOMPILING)
+add_executable(buildheader CONFIG/buildheader.c)
+add_dependencies(generate_header buildheader)
+endif()
 
 add_library(vrb SHARED ${SOURCE_FILES})
 add_dependencies(vrb generate_header)
