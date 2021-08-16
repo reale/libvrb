@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.10)
+
 include (GNUInstallDirs)
 
 set (SOURCE_FILES
@@ -38,6 +40,7 @@ install(FILES ${GEN_HEADER_DIR}/vrb.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 endif()
 
 add_library(vrb SHARED ${SOURCE_FILES})
+set_target_properties(vrb PROPERTIES SOVERSION 0)
 add_dependencies(vrb generate_header)
 
 add_executable(vbuf vrb/src/bin/vbuf.c)
