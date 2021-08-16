@@ -1,3 +1,4 @@
+include (GNUInstallDirs)
 
 set (SOURCE_FILES
     vrb/src/lib/vrb/vrb_destroy.c
@@ -33,6 +34,7 @@ add_custom_target(generate_header ALL DEPENDS ${GEN_HEADER_DIR}/vrb.h)
 if (NOT CMAKE_CROSSCOMPILING)
 add_executable(buildheader CONFIG/buildheader.c)
 add_dependencies(generate_header buildheader)
+install(FILES ${GEN_HEADER_DIR}/vrb.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 endif()
 
 add_library(vrb SHARED ${SOURCE_FILES})
@@ -41,9 +43,9 @@ add_dependencies(vrb generate_header)
 add_executable(vbuf vrb/src/bin/vbuf.c)
 target_link_libraries(vbuf vrb)
 
-install(TARGETS vrb DESTINATION /usr/lib)
-install(TARGETS vbuf DESTINATION /usr/bin)
+install(TARGETS vrb DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(TARGETS vbuf DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 if (NOT CMAKE_CROSSCOMPILING)
-install(TARGETS buildheader DESTINATION /usr/bin)
+install(TARGETS buildheader DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif()
