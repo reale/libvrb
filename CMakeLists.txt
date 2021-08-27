@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 
+PROJECT(libvrb C)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
 include (GNUInstallDirs)
 
 set (SOURCE_FILES
@@ -28,7 +33,7 @@ include_directories(${GEN_HEADER_DIR})
 
 
 file(MAKE_DIRECTORY ${GEN_HEADER_DIR})
-add_custom_command(OUTPUT ${GEN_HEADER_DIR}/vrb.h 
+add_custom_command(OUTPUT ${GEN_HEADER_DIR}/vrb.h
                    COMMAND buildheader ${GEN_HEADER_DIR}/vrb.h ${SOURCE_FILES}
                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 add_custom_target(generate_header ALL DEPENDS ${GEN_HEADER_DIR}/vrb.h)
